@@ -1,14 +1,13 @@
 export interface User {
   _id: string;
-  username: string;
-  displayName: string;
   email: string;
+  displayName: string;
   token: string;
   role: string;
-  avatar: string;
+  avatar: string | null;
 }
 export interface LoginMutation {
-  username: string;
+  email: string;
   password: string;
 }
 
@@ -32,9 +31,8 @@ export interface RegisterResponse {
   message: string;
 }
 export interface RegisterMutation {
-  username: string;
+  email: string;
   password: string;
   displayName: string;
-  email: string;
   avatar: File | null;
 }

@@ -1,37 +1,26 @@
 import React, { useState } from 'react';
 import { RegisterMutation } from '../../types';
-import { Avatar, Box, Button, Container, Grid, Link, TextField, Typography } from '@mui/material';
+import { Avatar, Box, Button, CircularProgress, Container, Grid, Link, TextField, Typography } from '@mui/material';
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import { useAppDispatch, useAppSelector } from '../../app/hooks';
-import { selectRegisterError } from './usersSlice';
+import { selectRegisterError, selectRegisterLoading } from './usersSlice';
 import { register } from './usersThunks';
 import FileInput from '../../components/UI/FileInput/FileInput';
 
-
-interface Props {
-  existingImage?: string | null;
-}
-const Register: React.FC<Props> = () => {
+const Register: React.FC = () => {
   const dispatch = useAppDispatch();
   const error = useAppSelector(selectRegisterError);
   const navigate = useNavigate();
+  const loading = useAppSelector(selectRegisterLoading);
 
   const [state, setState] = useState<RegisterMutation>({
-    username: '',
+    email: '',
     password: '',
     displayName: '',
-    email: '',
     avatar: null,
   });
 
-  const getFieldError = (fieldName: string) => {
-    try {
-      return error?.errors[fieldName].message;
-    } catch {
-      return undefined;
-    }
-  };
 
   const inputChangeHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
     const {name, value} = event.target;
@@ -41,22 +30,36 @@ const Register: React.FC<Props> = () => {
     });
   };
 
-  const submitFormHandler = async (event: React.FormEvent) => {
-    event.preventDefault();
-
-    await dispatch(register(state)).unwrap();
-    navigate('/');
-  };
 
   const fileInputChangeHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
     const {name, files} = e.target;
     if (files) {
       setState(prevState => ({
-        ...prevState, [name]: files[0]
+        ...prevState,
+        [name]: files && files[0] ? files[0] : null,
       }));
     }
   };
 
+
+  const submitFormHandler = async (event: React.FormEvent) => {
+    event.preventDefault();
+
+    try {
+      await dispatch(register(state)).unwrap();
+      navigate('/');
+    } catch (e) {
+      throw new Error();
+    }
+  };
+
+  const getFieldError = (fieldName: string) => {
+    try {
+      return error?.errors[fieldName].message;
+    } catch {
+      return undefined;
+    }
+  };
 
   return (
     <Container component="main" maxWidth="xs">
@@ -79,13 +82,14 @@ const Register: React.FC<Props> = () => {
             <Grid item xs={12}>
               <TextField
                 required
-                label="Username"
-                name="username"
-                value={state.username}
+                name="email"
+                label="E-mail"
+                type="email"
+                value={state.email}
                 onChange={inputChangeHandler}
-                autoComplete="new-username"
-                error={Boolean(getFieldError('username'))}
-                helperText={getFieldError('username')}
+                autoComplete="new-email"
+                error={Boolean(getFieldError('email'))}
+                helperText={getFieldError('email')}
               />
             </Grid>
             <Grid item xs={12}>
@@ -115,21 +119,8 @@ const Register: React.FC<Props> = () => {
               />
             </Grid>
             <Grid item xs={12}>
-              <TextField
-                required
-                name="email"
-                label="E-mail"
-                type="email"
-                value={state.email}
-                onChange={inputChangeHandler}
-                autoComplete="new-email"
-                error={Boolean(getFieldError('email'))}
-                helperText={getFieldError('email')}
-              />
-            </Grid>
-            <Grid item xs={12}>
               <FileInput
-                label="Avatar"
+                label="Image"
                 name="avatar"
                 onChange={fileInputChangeHandler}
               />
@@ -141,7 +132,7 @@ const Register: React.FC<Props> = () => {
             variant="contained"
             sx={{mt: 3, mb: 2}}
           >
-            Sign Up
+            {loading ? <CircularProgress/> : 'Sign Up'}
           </Button>
           <Grid container justifyContent="flex-end">
             <Grid item>

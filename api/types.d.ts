@@ -1,12 +1,11 @@
 import {Model} from "mongoose";
 export interface UserFields {
-  username: string;
+  email: string;
   password: string;
   token: string;
   role: string;
   displayName: string;
   googleID: string;
-  email: string;
   avatar: string;
 }
 

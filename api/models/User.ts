@@ -10,19 +10,19 @@ const SALT_WORK_FACTOR = 15;
 const Schema = mongoose.Schema;
 
 const UserSchema = new Schema<UserFields, UserModel, UserMethods>({
-  username: {
+  email: {
     type: String,
     required: true,
     unique: true,
     validate: {
       validator: async function (this:HydratedDocument<UserFields>, value: string): Promise<boolean> {
-        if(!this.isModified('username')) return true;
+        if(!this.isModified('email')) return true;
 
-        const user: HydratedDocument<UserFields> | null = await User.findOne({username: value});
+        const user: HydratedDocument<UserFields> | null = await User.findOne({email: value});
 
         return !user;
       },
-      message: 'This user is already registered'
+      message: 'This email is already registered'
     }
   },
   password: {
@@ -43,14 +43,7 @@ const UserSchema = new Schema<UserFields, UserModel, UserMethods>({
     type: String,
     required: true,
   },
-  googleID: {
-    type: String,
-    required: true,
-  },
-  email: {
-    type: String,
-    required: true,
-  },
+  googleID: String,
   avatar: {
     type: String,
     required: true,
@@ -66,7 +59,7 @@ UserSchema.methods.generateToken = function (){
 };
 
 UserSchema.pre('save', async function(next) {
-  console.log('i am about to save', this.username, this.password);
+  console.log('i am about to save', this.email, this.password);
 
   if(!this.isModified('password')) {
     return next();

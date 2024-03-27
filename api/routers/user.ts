@@ -10,13 +10,13 @@ import { OAuth2Client } from 'google-auth-library';
 const userRouter = express.Router();
 const client = new OAuth2Client(config.google.clientId);
 
-userRouter.post('/', imagesUpload.single('image'), async (req, res, next) =>{
+userRouter.post('/', imagesUpload.single('avatar'), async (req, res, next) =>{
   try {
     const user = new User ({
-      username: req.body.username,
+      email: req.body.email,
       password: req.body.password,
       displayName: req.body.displayName,
-      avatar: req.file?.filename,
+      avatar: req.file ? req.file.filename : null,
     });
 
     user.generateToken();
@@ -33,7 +33,7 @@ userRouter.post('/', imagesUpload.single('image'), async (req, res, next) =>{
 userRouter.post('/sessions', async (req, res, next) =>{
   try {
 
-    const user = await User.findOne({ username: req.body.username});
+    const user = await User.findOne({ email: req.body.email});
 
     if(!user){
       return res.status(422).send({error: 'User not found!'});
@@ -47,7 +47,7 @@ userRouter.post('/sessions', async (req, res, next) =>{
 
     user.generateToken();
     await user.save();
-    return res.send({message: 'username and password are correct!', user});
+    return res.send({message: 'email and password are correct!', user});
   }catch (e){
     next(e);
   }
@@ -97,7 +97,7 @@ userRouter.post('/google', async (req, res, next) => {
 userRouter.get('/secret', auth, async (req: RequestWithUser, res, next) =>{
   try {
 
-    return res.send({message: 'This is a secret message!', username: req.user?.username});
+    return res.send({message: 'This is a secret message!', email: req.user?.email});
 
   }catch (e){
     next(e);
