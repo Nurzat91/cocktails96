@@ -8,8 +8,8 @@ const config = {
   rootPath,
   publicPath: path.join(rootPath, 'public'),
   mongoose: {
-    // db: 'mongodb://localhost/cocktails',
-    db: "mongodb://127.0.0.1:27017/cocktails",
+    db: 'mongodb://localhost/cocktails',
+    // db: "mongodb://127.0.0.1:27017/cocktails",
   },
   google: {
     clientId: process.env['GOOGLE_CLIENT_ID'],

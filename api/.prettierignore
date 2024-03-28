@@ -5,3 +5,4 @@ public/*
 .prettierrc
 nodemon.json
 tsconfig.json
+.env
