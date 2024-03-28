@@ -20,7 +20,7 @@ export const register = createAsyncThunk<RegisterResponse,
         }
       });
       const response = await axiosApi.post('/users', formData);
-      return response.data.user;
+      return response.data;
     } catch (e) {
 
       if (isAxiosError(e) && e.response && e.response.status === 422) {
