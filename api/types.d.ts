@@ -16,3 +16,15 @@ interface UserMethods{
 
 type UserModel = Model<UserFields, {}, UserMethods>;
 
+export interface Ingredient {
+  name: string;
+  amount: string;
+}
+export interface Cocktails{
+  author: Types.ObjectId;
+  name: string;
+  image: string;
+  receipt: string;
+  isPublished: boolean;
+  ingredients: Ingredient[];
+}
