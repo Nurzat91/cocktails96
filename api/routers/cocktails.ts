@@ -14,17 +14,14 @@ cocktailRouter.get('/', role, async (req, res, next) => {
   try {
     const user = (req as RequestWithUser).user;
     const queryUser = req.query.user as string;
+    let cocktails;
     if (queryUser) {
-      const cocktails = await Cocktail.find({author: queryUser});
-      return res.send(cocktails);
+      cocktails = await Cocktail.find({author: queryUser});
+    } else if (user && user.role === "admin") {
+      cocktails = await Cocktail.find();
+    } else {
+      cocktails = await Cocktail.find({ isPublished: true });
     }
-    if (user && user.role === "admin") {
-      const cocktails = await Cocktail.find();
-      return res.send(cocktails);
-    }
-    const cocktails = await Cocktail.find({
-      isPublished: true
-    });
     return res.send(cocktails);
   } catch(e) {
     return next(e);
