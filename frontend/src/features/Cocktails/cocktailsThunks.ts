@@ -55,7 +55,7 @@ export const createCocktails = createAsyncThunk<Cocktail, CocktailMutation>(
 
 export const publicCocktails = createAsyncThunk<Cocktail, string>('Cocktails/public', async (id) => {
   try {
-    const response = await axiosApi.patch('/cocktails/' + id + '/togglePublished');
+    const response = await axiosApi.patch('/cocktails/' + id + '/isPublished');
     return response.data;
   } catch (e) {
     return e;

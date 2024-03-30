@@ -105,7 +105,7 @@ const CocktailForm = () => {
              </Grid>
              <Grid width='60%'>
                {state.ingredients.map((_ingredient, index) =>
-                 <Box width='100%' margin='20px' marginBottom={2}>
+                 <Box key={index} width='100%' margin='20px' marginBottom={2}>
                    <TextField
                      sx={{width: '75%'}}
                      label="Ingredient"

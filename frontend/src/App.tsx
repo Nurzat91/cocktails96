@@ -11,6 +11,8 @@ import { useAppDispatch, useAppSelector } from './app/hooks';
 import { selectUser } from './features/users/usersSlice';
 import { closeAlert, selectStatusOfAlert } from './features/Cocktails/cocktailsSlice';
 import CloseIcon from "@mui/icons-material/Close";
+import OneCocktailPage from './features/Cocktails/OneCocktailPage';
+import CocktailsPageFromUser from "./features/Cocktails/CocktailsPageFromUser";
 
 function App() {
   const user = useAppSelector(selectUser);
@@ -48,11 +50,17 @@ function App() {
           </Box>
           <Routes>
             <Route path="/" element={<Cocktails/>} />
-            <Route path="/cocktails/new" element={(<CocktailForm />
-              // <ProtectedRoute isAllowed={user && user.role === 'admin'}>
-              //   <CocktailForm />
-              // </ProtectedRoute>
+            <Route path="/cocktails/new" element={(
+              <ProtectedRoute isAllowed={user && user.role === 'admin'}>
+                <CocktailForm />
+              </ProtectedRoute>
             )} />
+            <Route path="/cocktails/mycocktails" element={(
+              <ProtectedRoute isAllowed={user && user.role === 'admin'}>
+                <CocktailsPageFromUser />
+              </ProtectedRoute>
+            )} />
+            <Route path="/cocktails/:id" element={<OneCocktailPage/>}/>
             <Route path="/register" element={<Register />} />
             <Route path="/login" element={<Login />} />
             <Route path="*" element={<ErrorPage/>} />

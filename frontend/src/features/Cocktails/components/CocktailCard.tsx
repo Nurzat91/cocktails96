@@ -43,7 +43,7 @@ const CocktailCard: React.FC<state> = ({cocktail}) => {
 
   return (
     <Card sx={{width: '30%', margin: '1%'}}>
-      <CardMedia component="img" height="200" image={imgUrl} alt="cocktail"/>
+      <CardMedia onClick={onClickNavigate} component="img" height="200" image={imgUrl} alt="cocktail"/>
       <CardContent>
         <CardActionArea onClick={onClickNavigate}>
           <Typography gutterBottom variant="h5" component="div">
